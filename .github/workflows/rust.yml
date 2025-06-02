@@ -38,7 +38,18 @@ jobs:
       # Pull opencv source, unzip, configure cmake, build, and install
       # Disable image formats like jpeg, png, tiff, as we use rust image crate instead.  See https://docs.opencv.org/4.x/db/d05/tutorial_config_reference.html
       # Inspired from https://github.com/twistedfall/opencv-rust/issues/364
+      - name: Cache OpenCV build
+        id: cache-opencv
+        uses: actions/cache@v4
+        with:
+          path: /opt/opencv
+          key: ${{ runner.os }}-opencv-4.8.1 # Use a key that changes if OpenCV version changes
+          restore-keys: |
+            ${{ runner.os }}-opencv-
+
+      # Install OpenCV static lib (only if not in cache)
       - name: Install OpenCV static lib
+        if: steps.cache-opencv.outputs.cache-hit != 'true'
         run: |
           wget -O opencv.zip https://github.com/opencv/opencv/archive/refs/tags/4.8.1.zip
           wget -O opencv_contrib.zip https://github.com/opencv/opencv_contrib/archive/refs/tags/4.8.1.zip
