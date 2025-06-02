@@ -80,7 +80,7 @@ jobs:
       - name: Prepare Artifacts
         run: |
           export face_cropper_version=$(perl -ne 'print "$1\n" if /^version\s*=\s*"(.*?)"/' Cargo.toml)
-          chmod +x target/release/mediatoascii
+          chmod +x target/release/face-cropper
           tar -czvf face-cropper-x86_64-unknown-linux-gnu-$face_cropper_version.tar.gz -C target/release/face-cropper
         
       # Upload artifact: https://github.com/actions/upload-artifact
