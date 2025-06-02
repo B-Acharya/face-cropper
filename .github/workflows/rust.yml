@@ -74,7 +74,7 @@ jobs:
         
       # Upload artifact: https://github.com/actions/upload-artifact
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@main
         with:
           name: mediatoascii-x86_64-unknown-linux-gnu
           path: mediatoascii-x86_64-unknown-linux-gnu-*.tar.gz
