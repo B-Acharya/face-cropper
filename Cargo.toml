@@ -1,0 +1,10 @@
+[package]
+name = "face-cropper"
+version = "0.1.0"
+authors = ["Bhargav Acharya <bacharya@techfak.uni-bielefeld.de>"]
+edition = "2021"
+
+[dependencies]
+opencv = {version = "0.94.4" ,features = ["clang-runtime"] }
+glob = "0.3.2"
+clap = { version = "4.0", features = ["derive"] }
