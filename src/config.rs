@@ -14,7 +14,7 @@ pub struct AppConfig {
 
     /// Path to Haarcascade XML file
     #[arg(long)]
-    pub cascade_path: Option<PathBuf>,
+    pub cascade_path: PathBuf,
 
     /// Whether to compute mean intensity for each detected face
     #[arg(long)]

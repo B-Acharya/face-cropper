@@ -8,3 +8,5 @@ edition = "2021"
 opencv = {version = "0.94.4" ,features = ["clang-runtime"] }
 glob = "0.3.2"
 clap = { version = "4.0", features = ["derive"] }
+tempfile = "3.20.0"
+anyhow = "1.0.98"

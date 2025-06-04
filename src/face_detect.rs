@@ -10,6 +10,13 @@ pub struct FaceDetector {
     classifier: CascadeClassifier,
 }
 
+pub fn load_image(image_path: &str) -> Result<opencv::core::Mat> {
+    println!("Processing single image: {}", image_path);
+    let frame = opencv::imgcodecs::imread(image_path, opencv::imgcodecs::IMREAD_UNCHANGED)
+        .expect("Failed to load Image via OpenCV");
+    Ok(frame)
+}
+
 impl FaceDetector {
     pub fn new(cascade_path: &PathBuf) -> Result<Self> {
         let cascasde_path_str = cascade_path.to_str().unwrap();
@@ -27,13 +34,6 @@ impl FaceDetector {
             }
         };
         Ok(Self { classifier })
-    }
-
-    pub fn load_image(image_path: &str) -> Result<opencv::core::Mat> {
-        println!("Processing single image: {}", image_path);
-        let frame = opencv::imgcodecs::imread(image_path, opencv::imgcodecs::IMREAD_UNCHANGED)
-            .expect("Failed to load Image via OpenCV");
-        Ok(frame)
     }
 
     pub fn detect_faces(
@@ -66,7 +66,7 @@ impl FaceDetector {
         Ok(cropped_frame.clone_pointee())
     }
 
-    pub fn save_corpped(cropped_frame: &opencv::core::Mat, save_path: &str) -> Result<()> {
+    pub fn save_cropped(self, cropped_frame: &opencv::core::Mat, save_path: &str) -> Result<()> {
         let imwrite_result = opencv::imgcodecs::imwrite_def(save_path, &cropped_frame);
 
         if let Err(e) = imwrite_result {
