@@ -1,11 +1,11 @@
 mod config;
-mod face_detect;
+mod pipeline;
 use clap::Parser;
 use config::{AppConfig, InputMode};
 use glob::glob;
+use pipeline::{process_folder_with_images, process_image};
 use std::path::PathBuf; // Import PathBuf directly for clarity
-
-use face_detect::{load_image, FaceDetector};
+mod face_detect;
 
 fn add_cropped_suffix(path: &PathBuf) -> PathBuf {
     let parent = path.parent().unwrap_or_else(|| path.as_path());
@@ -29,22 +29,18 @@ fn main() {
             image: Some(path), ..
         } => {
             println!("Processing single image: {}", path.display());
-            let face_detector_res = FaceDetector::new(&config.cascade_path);
-            match face_detector_res {
-                Ok(mut face_detector) => {
-                    let frame = load_image(path.to_str().unwrap()).unwrap();
-                    let cropped_face = face_detector.detect_and_crop_face(&frame).unwrap();
-                    let _ = face_detector.save_cropped(&cropped_face, "./cropped.png");
-                }
-                Err(e) => {
-                    println!("{:?}", e);
-                }
-            };
+            let cascade_path = config.cascade_path;
+            let image_path = path.to_str().unwrap();
+            process_image(&cascade_path, image_path, config.output_path);
         }
         InputMode {
             folder: Some(path), ..
         } => {
             println!("Processing folder image: {}", path.display());
+            println!("Processing single image: {}", path.display());
+            let cascade_path = config.cascade_path;
+            let folder_path = path.to_str().unwrap();
+            process_folder_with_images(&cascade_path, folder_path, config.output_path);
         }
         _ => unreachable!("Use one of the modes"),
     }

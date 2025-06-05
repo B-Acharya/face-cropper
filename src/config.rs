@@ -19,6 +19,10 @@ pub struct AppConfig {
     /// Whether to compute mean intensity for each detected face
     #[arg(long)]
     pub mean_intensity: bool,
+
+    // Optional output save DIR ?
+    #[arg(short, long)]
+    pub output_path: PathBuf,
 }
 
 #[derive(Args, Debug)]
