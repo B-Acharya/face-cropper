@@ -2,27 +2,15 @@ mod config;
 mod pipeline;
 use clap::Parser;
 use config::{AppConfig, InputMode};
-use glob::glob;
-use pipeline::{process_folder_with_images, process_image};
-use std::path::PathBuf; // Import PathBuf directly for clarity
+use pipeline::{
+    process_folder_with_images, process_folder_with_images_iter, process_image, process_video,
+};
 mod face_detect;
-
-fn add_cropped_suffix(path: &PathBuf) -> PathBuf {
-    let parent = path.parent().unwrap_or_else(|| path.as_path());
-    let stem = path.file_stem().unwrap_or_default();
-    let ext = path.extension().unwrap_or_default();
-
-    let new_file_name = format!(
-        "{}_cropped.{}",
-        stem.to_str().unwrap(),
-        ext.to_str().unwrap()
-    );
-
-    parent.join(new_file_name)
-}
+use std::time::Instant;
 
 fn main() {
     let config = AppConfig::parse();
+    let start = Instant::now();
 
     match &config.input {
         InputMode {
@@ -37,11 +25,24 @@ fn main() {
             folder: Some(path), ..
         } => {
             println!("Processing folder image: {}", path.display());
-            println!("Processing single image: {}", path.display());
             let cascade_path = config.cascade_path;
             let folder_path = path.to_str().unwrap();
-            process_folder_with_images(&cascade_path, folder_path, config.output_path);
+            //process_folder_with_images(&cascade_path, folder_path, config.output_path);
+            process_folder_with_images_iter(&cascade_path, folder_path, config.output_path);
+        }
+
+        InputMode {
+            video: Some(path), ..
+        } => {
+            println!("Processing single video: {}", path.display());
+            let cascade_path = config.cascade_path;
+            let vidoe_path = path.to_str().unwrap();
+
+            process_video(&cascade_path, vidoe_path, config.output_path);
         }
         _ => unreachable!("Use one of the modes"),
     }
+    let duration = start.elapsed();
+
+    println!("Total time to run:{:?}", duration);
 }

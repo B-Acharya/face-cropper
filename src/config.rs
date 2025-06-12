@@ -18,7 +18,7 @@ pub struct AppConfig {
 
     /// Whether to compute mean intensity for each detected face
     #[arg(long)]
-    pub mean_intensity: bool,
+    pub mean: bool,
 
     // Optional output save DIR ?
     #[arg(short, long)]
@@ -35,4 +35,7 @@ pub struct InputMode {
     /// Path to a folder containing images
     #[arg(long, group = "input")]
     pub folder: Option<PathBuf>,
+
+    #[arg(long, group = "input")]
+    pub video: Option<PathBuf>,
 }

@@ -1,8 +1,6 @@
 use opencv::objdetect::CascadeClassifier;
 use opencv::objdetect::CascadeClassifierTrait;
-use std::io;
-use std::path::PathBuf;
-use tempfile::NamedTempFile;
+use std::path::Path;
 
 use anyhow::Result;
 
@@ -17,7 +15,7 @@ pub fn load_image(image_path: &str) -> Result<opencv::core::Mat> {
 }
 
 impl FaceDetector {
-    pub fn new(cascade_path: &PathBuf) -> Result<Self> {
+    pub fn new(cascade_path: &Path) -> Result<Self> {
         let cascasde_path_str = cascade_path.to_str().unwrap();
         let classifier_result = opencv::objdetect::CascadeClassifier::new(cascasde_path_str);
 
@@ -75,9 +73,18 @@ impl FaceDetector {
         if let Err(e) = imwrite_result {
             eprintln!("Error saving cropped image to '{}': {:?}", save_path, e);
             std::process::exit(1);
-        } else {
-            println!("Cropped image saved successfully to: '{}'", save_path);
         }
+        //else {
+        //    println!("Cropped image saved successfully to: '{}'", save_path);
+        //}
         Ok(())
     }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*; // Bring the items#[test]
+                  //
+
+    fn create_directory_with_images() {}
 }

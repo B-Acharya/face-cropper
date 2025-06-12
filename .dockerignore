@@ -1,0 +1,22 @@
+# Ignore target directory (build artifacts)
+target
+
+# Git stuff
+.git
+.gitignore
+
+# Editor/IDE configs
+*.swp
+*.swo
+*.swn
+*.bak
+*.tmp
+*.DS_Store
+.idea/
+.vscode/
+
+# Dependency lock backups
+Cargo.lock.bak
+
+target/
+
