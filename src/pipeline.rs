@@ -93,6 +93,8 @@ pub fn process_folder_with_images_iter(
 ) {
     let count = number_of_files(folder_path);
     let pb = ProgressBar::new(count as u64);
+    let save_path = output_dir.join("facecrop_resutls");
+    let _ = check_file_exists(&save_path);
     match FaceDetector::new(cascade_path) {
         Ok(mut face_detector) => {
             let dir = Path::new(folder_path);
@@ -110,15 +112,13 @@ pub fn process_folder_with_images_iter(
                     .for_each(|entry| {
                         let input_path = entry.path();
                         let filename = input_path.file_name().unwrap();
-                        let save_path = output_dir.join("facecrop_resutls");
-                        let _ = check_file_exists(&save_path);
-                        let save_path = save_path.join(filename);
+                        let save_path_image = save_path.join(filename);
 
                         // Process the image
                         detect_and_save(
                             &mut face_detector,
                             input_path.to_str().unwrap(),
-                            save_path.to_str().unwrap(),
+                            save_path_image.to_str().unwrap(),
                         );
                         pb.inc(1);
                     });
@@ -136,6 +136,7 @@ pub fn process_video(cascade_path: &Path, video_path: &str, output_dir: PathBuf)
     let filename = input_path.file_stem().unwrap();
     let save_path = output_dir.join(filename);
     println!("{:?}", save_path);
+    println!("{}", opencv::core::get_build_information().unwrap());
 
     let _ = check_file_exists(&save_path);
     //let pb = ProgressBar::new(count as u64);
@@ -157,10 +158,10 @@ pub fn process_video(cascade_path: &Path, video_path: &str, output_dir: PathBuf)
                                 let cropped_face =
                                     face_detector.detect_and_crop_face(&capture_image).unwrap();
 
-                                let save_path = save_path.join(count.to_string() + ".png");
+                                let save_path_image = save_path.join(count.to_string() + ".png");
 
                                 let _ = face_detector
-                                    .save_cropped(&cropped_face, save_path.to_str().unwrap());
+                                    .save_cropped(&cropped_face, save_path_image.to_str().unwrap());
                                 count += 1;
                                 pb.inc(1);
                                 continue;
@@ -203,6 +204,6 @@ pub fn process_video(cascade_path: &Path, video_path: &str, output_dir: PathBuf)
 // -- ..
 // -- Participant 3
 
-//TODO: process videos
+//TODO: replace all unwrap with expect or ?
 
 //TODO: Process folder wth videos

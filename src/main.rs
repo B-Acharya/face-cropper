@@ -2,15 +2,11 @@ mod config;
 mod pipeline;
 use clap::Parser;
 use config::{AppConfig, InputMode};
-use pipeline::{
-    process_folder_with_images, process_folder_with_images_iter, process_image, process_video,
-};
+use pipeline::{process_folder_with_images_iter, process_image, process_video};
 mod face_detect;
-use std::time::Instant;
 
 fn main() {
     let config = AppConfig::parse();
-    let start = Instant::now();
 
     match &config.input {
         InputMode {
@@ -37,12 +33,8 @@ fn main() {
             println!("Processing single video: {}", path.display());
             let cascade_path = config.cascade_path;
             let vidoe_path = path.to_str().unwrap();
-
             process_video(&cascade_path, vidoe_path, config.output_path);
         }
         _ => unreachable!("Use one of the modes"),
     }
-    let duration = start.elapsed();
-
-    println!("Total time to run:{:?}", duration);
 }
