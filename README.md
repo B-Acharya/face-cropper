@@ -17,13 +17,6 @@ A high-performance, command-line application for face detection using Haar casca
 
 - **Rust** (install via [rustup](https://rustup.rs))
 - Opencv-rust (Check https://github.com/twistedfall/opencv-rust)
-- **Python 3.8+** (for benchmark comparisons)
-- Python dependencies for benchmarking:
-  - Install uv [https://docs.astral.sh/uv/guides/install-python/](https://docs.astral.sh/uv/getting-started/installation/)
-  ```bash
-  cd python-face-cropper
-  uv run main.py
-  ```
 
 ## Building the Rust application
 
@@ -47,10 +40,19 @@ Note: Only one of --image, --folder, or --video should be provided at a time.
 
 ## Python implementation
 
-uv run python-face-cropper/main.py \
- --video ./video.mp4 \
- --cascade-path ./assets/haarcascade_frontalface_default.xml \
- --output-path ./output
+- **Python 3.8+** (for benchmark comparisons)
+- Python dependencies for benchmarking:
+
+  - Install uv [https://docs.astral.sh/uv/guides/install-python/](https://docs.astral.sh/uv/getting-started/installation/)
+
+  ```bash
+  cd python-face-cropper
+
+  uv run python-face-cropper/main.py \
+  --video ./video.mp4 \
+  --cascade-path ./assets/haarcascade_frontalface_default.xml \
+  --output-path ./output
+  ```
 
 ## Benchmarking
 
@@ -58,12 +60,14 @@ Uses hyperfine for benchmarking. Check the /benchmakr/benchmark.sh
 
 ## 🐳 Docker Support (Static Compilation)
 
-You can build a **fully static binary** inside Docker with OpenCV and FFmpeg linked statically.
+You can build a **static binary** inside Docker with OpenCV.
 
 ### Build Docker Image
 
+The below command will compile and copy the binaries to your local system
+
 ```bash
-docker build -t face-cropper-builder .
+docker build output=. .
 ```
 
 ## 🙌 Acknowledgements
