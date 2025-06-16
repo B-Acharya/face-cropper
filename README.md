@@ -22,7 +22,7 @@ A high-performance, command-line application for face detection using Haar casca
 - Python dependencies for benchmarking:
   - Install uv [https://docs.astral.sh/uv/guides/install-python/](https://docs.astral.sh/uv/getting-started/installation/)
   ```bash
-  cd benchmark
+  cd python-face-cropper
   uv run main.py
   ```
 
