@@ -55,6 +55,16 @@ uv run python-face-cropper/main.py \
 
 Uses hyperfine for benchmarking. Check the /benchmakr/benchmark.sh
 
+## 🐳 Docker Support (Static Compilation)
+
+You can build a **fully static binary** inside Docker with OpenCV and FFmpeg linked statically.
+
+### Build Docker Image
+
+```bash
+docker build -t face-cropper-builder .
+```
+
 ## 🙌 Acknowledgements
 
 - Opencv-rust
