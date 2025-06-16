@@ -1,9 +1,12 @@
 use super::face_detect::load_image;
 use super::face_detect::FaceDetector;
+use indicatif;
+use indicatif::ParallelProgressIterator;
 use indicatif::ProgressBar;
 use opencv::mod_prelude::ToOutputArray;
 use opencv::videoio::VideoCaptureTrait;
 use opencv::videoio::VideoCaptureTraitConst;
+use rayon::iter::{ParallelBridge, ParallelIterator};
 
 use std::fs;
 use std::path::Path;
@@ -33,6 +36,7 @@ pub fn process_image(cascade_path: &PathBuf, image_path: &str, output_dir: PathB
 
     match face_detector_res {
         Ok(mut face_detector) => {
+            //TODO: path::From ? or path::new?
             let input_path = Path::new(image_path);
             let filename = input_path.file_name().unwrap();
             let save_path = save_path.join(filename);
@@ -127,6 +131,49 @@ pub fn process_folder_with_images_iter(
         }
         Err(e) => eprintln!("Error initializing face detector: {:?}", e),
     }
+}
+
+pub fn process_folder_with_images_rayon(
+    cascade_path: &Path,
+    folder_path: &str,
+    output_dir: PathBuf,
+) {
+    let count = number_of_files(folder_path);
+    let save_path = output_dir.join("facecrop_resutls");
+    let _ = check_file_exists(&save_path);
+    let dir = Path::new(folder_path);
+    let _ = opencv::core::set_num_threads(1).unwrap_or(println!("failed to set threads"));
+    if let Ok(entries) = fs::read_dir(dir) {
+        entries
+            .flatten()
+            .filter(|entry| {
+                entry.path().is_file()
+                    && entry
+                        .path()
+                        .extension()
+                        .map(|ext| ext == "png")
+                        .unwrap_or(false)
+            })
+            .par_bridge()
+            .progress_count(count as u64)
+            .for_each(|entry| {
+                match FaceDetector::new(cascade_path) {
+                    Ok(mut face_detector) => {
+                        let input_path = entry.path();
+                        let filename = input_path.file_name().unwrap();
+                        let save_path_image = save_path.join(filename);
+
+                        // Process the image
+                        detect_and_save(
+                            &mut face_detector,
+                            input_path.to_str().unwrap(),
+                            save_path_image.to_str().unwrap(),
+                        );
+                    }
+                    Err(e) => eprintln!("Error initializing face detector: {:?}", e),
+                }
+            });
+    };
 }
 
 pub fn process_video(cascade_path: &Path, video_path: &str, output_dir: PathBuf) {

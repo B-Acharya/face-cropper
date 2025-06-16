@@ -2,7 +2,9 @@ mod config;
 mod pipeline;
 use clap::Parser;
 use config::{AppConfig, InputMode};
-use pipeline::{process_folder_with_images_iter, process_image, process_video};
+use pipeline::{
+    process_folder_with_images_iter, process_folder_with_images_rayon, process_image, process_video,
+};
 mod face_detect;
 
 fn main() {
@@ -24,7 +26,7 @@ fn main() {
             let cascade_path = config.cascade_path;
             let folder_path = path.to_str().unwrap();
             //process_folder_with_images(&cascade_path, folder_path, config.output_path);
-            process_folder_with_images_iter(&cascade_path, folder_path, config.output_path);
+            process_folder_with_images_rayon(&cascade_path, folder_path, config.output_path);
         }
 
         InputMode {
