@@ -9,7 +9,6 @@ A high-performance, command-line application for face detection using Haar casca
 - 🖼️ Process a **single image**
 - 🗂️ Batch process **folders of images**
 - 🎞️ Detect faces in **videos**
-- 🚀 Optimized for performance and benchmarked
 - 🐍 Python version available for comparative benchmarking
 
 ---
