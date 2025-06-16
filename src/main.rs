@@ -2,13 +2,22 @@ mod config;
 mod pipeline;
 use clap::Parser;
 use config::{AppConfig, InputMode};
+use num_cpus;
 use pipeline::{
     process_folder_with_images_iter, process_folder_with_images_rayon, process_image, process_video,
 };
+use rayon::ThreadPoolBuilder;
 mod face_detect;
 
 fn main() {
     let config = AppConfig::parse();
+
+    ThreadPoolBuilder::new()
+        .num_threads(num_cpus::get()) // or specify manually
+        .build_global()
+        .unwrap();
+
+    println!("Rayon thread pool size: {}", rayon::current_num_threads());
 
     match &config.input {
         InputMode {

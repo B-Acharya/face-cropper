@@ -48,11 +48,11 @@ hyperfine --warmup 5 --runs 5 --show-output \
 #          FOLDER MODE BENCHMARK      #
 #######################################
 
-#echo -e "\n== Benchmark: FOLDER mode =="
-#
-#hyperfine --warmup 5 --runs 5 --show-output \
-#	"python $PYTHON_SCRIPT --folder $FOLDER_PATH --cascade-path $CASCADE_PATH --output-path $OUTPUT_PY_FOLDER" \
-#	"$RUST_BINARY --folder $FOLDER_PATH --cascade-path $CASCADE_PATH --output-path $OUTPUT_RS_FOLDER"
+echo -e "\n== Benchmark: FOLDER mode =="
+
+hyperfine --warmup 5 --runs 5 --show-output \
+	"python $PYTHON_SCRIPT --folder $FOLDER_PATH --cascade-path $CASCADE_PATH --output-path $OUTPUT_PY_FOLDER" \
+	"$RUST_BINARY --folder $FOLDER_PATH --cascade-path $CASCADE_PATH --output-path $OUTPUT_RS_FOLDER"
 
 #######################################
 #          VIDEO MODE BENCHMARK       #

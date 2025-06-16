@@ -28,6 +28,11 @@ fn check_file_exists(path: &PathBuf) {
     }
 }
 
+/// Detects a face in a single image and saves the cropped result.
+///
+/// - `cascade_path`: Path to the Haar cascade XML file.
+/// - `image_path`: Path to the input image.
+/// - `output_dir`: Directory where the result will be saved.
 pub fn process_image(cascade_path: &PathBuf, image_path: &str, output_dir: PathBuf) {
     let face_detector_res = FaceDetector::new(cascade_path);
     let save_path = output_dir.join("facecrop_resutls");
@@ -54,6 +59,11 @@ fn number_of_files(image_dir: &str) -> usize {
     entries.count()
 }
 
+/// Processes all `.png` images in a folder one by one and saves cropped face results.
+///
+/// - `cascade_path`: Path to the Haar cascade XML file.
+/// - `folder_path`: Folder containing `.png` images.
+/// - `output_dir`: Directory to save cropped face images.
 pub fn process_folder_with_images(cascade_path: &Path, folder_path: &str, output_dir: PathBuf) {
     let count = number_of_files(folder_path);
     let pb = ProgressBar::new(count as u64);
@@ -64,14 +74,14 @@ pub fn process_folder_with_images(cascade_path: &Path, folder_path: &str, output
                 for entry in entries.flatten() {
                     let input_path = entry.path();
                     let filename = input_path.file_name().unwrap();
-                    let save_path = output_dir.join("facecrop_resutls");
+                    let save_path = output_dir.join("facecrop_results");
                     let _ = check_file_exists(&save_path);
                     let save_path = save_path.join(filename);
 
                     if input_path.is_file()
                         && input_path
                             .extension()
-                            .map(|ext| ext == "png")
+                            .map(|ext| ext == "png" || ext == "tiff")
                             .unwrap_or(false)
                     {
                         // Process the image
@@ -90,6 +100,13 @@ pub fn process_folder_with_images(cascade_path: &Path, folder_path: &str, output
     }
 }
 
+/// Processes all `.png` images in a folder using a standard iterator and saves cropped face results.
+///
+/// Similar to `process_folder_with_images`, but uses a `.for_each` style iteration.
+///
+/// - `cascade_path`: Path to the Haar cascade XML file.
+/// - `folder_path`: Folder containing images.
+/// - `output_dir`: Output directory for cropped faces.
 pub fn process_folder_with_images_iter(
     cascade_path: &Path,
     folder_path: &str,
@@ -110,7 +127,7 @@ pub fn process_folder_with_images_iter(
                             && entry
                                 .path()
                                 .extension()
-                                .map(|ext| ext == "png")
+                                .map(|ext| ext == "png" || ext == "tiff")
                                 .unwrap_or(false)
                     })
                     .for_each(|entry| {
@@ -133,16 +150,24 @@ pub fn process_folder_with_images_iter(
     }
 }
 
+/// Processes images in parallel using Rayon to speed up face detection.
+///
+/// This function uses multiple threads to process `.png` images in a folder in parallel.
+///
+/// - `cascade_path`: Path to the Haar cascade XML file.
+/// - `folder_path`: Folder containing images.
+/// - `output_dir`: Output directory for cropped faces.
 pub fn process_folder_with_images_rayon(
     cascade_path: &Path,
     folder_path: &str,
     output_dir: PathBuf,
 ) {
+    //This is doubled and can be removed
     let count = number_of_files(folder_path);
     let save_path = output_dir.join("facecrop_resutls");
     let _ = check_file_exists(&save_path);
     let dir = Path::new(folder_path);
-    let _ = opencv::core::set_num_threads(1).unwrap_or(println!("failed to set threads"));
+    opencv::core::set_num_threads(1).expect("Failed to set");
     if let Ok(entries) = fs::read_dir(dir) {
         entries
             .flatten()
@@ -151,7 +176,7 @@ pub fn process_folder_with_images_rayon(
                     && entry
                         .path()
                         .extension()
-                        .map(|ext| ext == "png")
+                        .map(|ext| ext == "png" || ext == "tiff")
                         .unwrap_or(false)
             })
             .par_bridge()
@@ -176,6 +201,11 @@ pub fn process_folder_with_images_rayon(
     };
 }
 
+/// Extracts frames from a video, detects faces, and saves cropped face images.
+///
+/// - `cascade_path`: Path to the Haar cascade XML file.
+/// - `video_path`: Path to the input video file.
+/// - `output_dir`: Directory where cropped face images will be saved.
 pub fn process_video(cascade_path: &Path, video_path: &str, output_dir: PathBuf) {
     let face_detector_res = FaceDetector::new(cascade_path);
     let input_path = Path::new(video_path);

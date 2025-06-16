@@ -56,10 +56,12 @@ impl FaceDetector {
     pub fn detect_and_crop_face(&mut self, frame: &opencv::core::Mat) -> Result<opencv::core::Mat> {
         let roi = self.detect_faces(frame).unwrap();
 
+        //This assumes that the face is present, needs a fallback if roi is empty
         let first_roi = roi.get(0).unwrap();
 
         let cropped_frame = opencv::core::Mat::roi(frame, first_roi).unwrap();
 
+        //Shouldnt a reference be passes here ? costly to pass the whole cropped frame.
         Ok(cropped_frame.clone_pointee())
     }
 
@@ -74,9 +76,6 @@ impl FaceDetector {
             eprintln!("Error saving cropped image to '{}': {:?}", save_path, e);
             std::process::exit(1);
         }
-        //else {
-        //    println!("Cropped image saved successfully to: '{}'", save_path);
-        //}
         Ok(())
     }
 }

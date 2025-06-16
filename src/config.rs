@@ -23,6 +23,7 @@ pub struct AppConfig {
     // Optional output save DIR ?
     #[arg(short, long)]
     pub output_path: PathBuf,
+    //TODO: Add flag to process using rayon, right now defaults to rayon
 }
 
 #[derive(Args, Debug)]

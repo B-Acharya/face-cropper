@@ -54,9 +54,16 @@ Note: Only one of --image, --folder, or --video should be provided at a time.
   --output-path ./output
   ```
 
-## Benchmarking
+### Benchmarking
 
-Uses hyperfine for benchmarking. Check the /benchmakr/benchmark.sh
+Requires [hyperfine](https://github.com/sharkdp/hyperfine) for CLI benchmarking.
+
+Run:
+
+```bash
+cd benches
+bash benchmark.sh
+```
 
 ## 🐳 Docker Support (Static Compilation)
 
