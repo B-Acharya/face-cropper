@@ -20,8 +20,9 @@ A high-performance, command-line application for face detection using Haar casca
 - Opencv-rust (Check https://github.com/twistedfall/opencv-rust)
 - **Python 3.8+** (for benchmark comparisons)
 - Python dependencies for benchmarking:
+  - Install uv [https://docs.astral.sh/uv/guides/install-python/](https://docs.astral.sh/uv/getting-started/installation/)
   ```bash
-  pip install opencv-python click tqdm numpy
+  uv run opencv-python click tqdm numpy
   ```
 
 ## Building the Rust application
