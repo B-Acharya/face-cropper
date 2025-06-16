@@ -9,7 +9,6 @@ A high-performance, command-line application for face detection using Haar casca
 - 🖼️ Process a **single image**
 - 🗂️ Batch process **folders of images**
 - 🎞️ Detect faces in **videos**
-- 🚀 Optimized for performance and benchmarked
 - 🐍 Python version available for comparative benchmarking
 
 ---
@@ -20,8 +19,10 @@ A high-performance, command-line application for face detection using Haar casca
 - Opencv-rust (Check https://github.com/twistedfall/opencv-rust)
 - **Python 3.8+** (for benchmark comparisons)
 - Python dependencies for benchmarking:
+  - Install uv [https://docs.astral.sh/uv/guides/install-python/](https://docs.astral.sh/uv/getting-started/installation/)
   ```bash
-  pip install opencv-python click tqdm numpy
+  cd python-face-cropper
+  uv run main.py
   ```
 
 ## Building the Rust application
