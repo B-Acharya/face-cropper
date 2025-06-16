@@ -22,7 +22,8 @@ A high-performance, command-line application for face detection using Haar casca
 - Python dependencies for benchmarking:
   - Install uv [https://docs.astral.sh/uv/guides/install-python/](https://docs.astral.sh/uv/getting-started/installation/)
   ```bash
-  uv run [/benchmark/main.py]
+  cd benchmark
+  uv run main.py
   ```
 
 ## Building the Rust application
